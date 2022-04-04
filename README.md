@@ -1,1 +1,1 @@
-# nodejs-db-tutorial
+# nodejs_db_tutorial
