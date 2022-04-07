@@ -1,7 +1,8 @@
 // Where we write our knex queries
-const knex = require('knex')
-const config = require('../knexfile')
-const db = knex(config.development)
+// const knex = require('knex')
+// const config = require('../knexfile')
+// const db = knex(config.development)
+const db = require('../dbConfig')
 
 // Lessons
 async function add(lesson) {
