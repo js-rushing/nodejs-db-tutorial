@@ -90,6 +90,74 @@ server.patch('/api/lessons/:id', (req, res) => {
     })
 })
 
+// MESSAGES
+// Add message
+server.post('/api/lessons/:id/messages', (req, res) => {
+  const { id } = req.params
+  const msg = req.body
+
+  if (!msg.lesson_id) {
+    msg['lesson_id'] = parseInt(id, 10)
+  }
+
+  LessonsDB.findById(id)
+    .then((lesson) => {
+      if (!lesson) {
+        return res.status(404).json({ message: 'Invalid id' })
+      }
+
+      // Check for required fields
+      if (!msg.sender || !msg.text) {
+        return res.status(400).json({ message: 'Must provide both Sender and Text values' })
+      }
+
+      LessonsDB.addMessage(msg, id)
+        .then((message) => {
+          if (message) {
+            return res.status(200).json(message)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          return res.status(500).json({ message: 'Failed to add message' })
+        })
+    })
+    .catch((error) => {
+      console.log(error)
+      return res.status(500).json({ message: 'Error finding lesson' })
+    })
+})
+
+// Get all messages
+server.get('/api/lessons/:id/messages', (req, res) => {
+  const { id } = req.params
+
+  LessonsDB.findLessonMessages(id).then(messages => {
+    if (messages) {
+      return res.status(200).json(messages)
+    }
+  }).catch(error => {
+    console.log(error)
+    return res.status(500).json({ message: 'Error retrieving messages' })
+  })
+})
+
+// Delete message
+server.delete('/api/messages/:id', (req, res) =>{
+  const { id } = req.params
+
+  LessonsDB.removeMessage(id).then(count => {
+    if (count > 0) {
+      return res.status(200).json({ message: `Message with id: ${id} successfully deleted`})
+    } else {
+      return res.status(404).json({ message: `Message with id: ${id} not found`})
+    }
+  }).catch(error => {
+    console.log(error)
+    return res.status(500).json({ message: 'Error deleting message'})
+  })
+})
+
 // Start server
 server.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`)
