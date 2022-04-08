@@ -6,9 +6,10 @@ const db = require('../dbConfig')
 
 // Lessons
 async function add(lesson) {
-  const { id } = await db('lessons').insert(lesson)
+  // const { id } = await db('lessons').insert(lesson)
 
-  return id
+  // return id
+  return await db('lessons').insert(lesson, ['id', 'name'])
 }
 
 function find() {
@@ -51,9 +52,10 @@ function findMessageById(id) {
 }
 
 async function addMessage(message, lesson_id) {
-  const { id } = await db('messages').where({ lesson_id }).insert(message)
+  // const { id } = await db('messages').where({ lesson_id }).insert(message)
 
-  return message
+  // return message
+  return await db('messages').where({ lesson_id }).insert(message, ['id'])
 }
 
 // Remove message
