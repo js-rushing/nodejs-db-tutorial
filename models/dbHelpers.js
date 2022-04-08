@@ -6,10 +6,13 @@ const db = require('../dbConfig')
 
 // Lessons
 async function add(lesson) {
-  // const { id } = await db('lessons').insert(lesson)
+  if (process.env.DB_ENVIRONMENT === 'development') {
+    const { id } = await db('lessons').insert(lesson)
 
-  // return id
-  return await db('lessons').insert(lesson, ['id', 'name'])
+    return id
+  } else if (process.env.DB_ENVIRONMENT === 'production') {
+    return await db('lessons').insert(lesson, ['id', 'name'])
+  }
 }
 
 function find() {
@@ -52,10 +55,13 @@ function findMessageById(id) {
 }
 
 async function addMessage(message, lesson_id) {
-  // const { id } = await db('messages').where({ lesson_id }).insert(message)
+  if (process.env.DB_ENVIRONMENT === 'development') {
+    const { id } = await db('messages').where({ lesson_id }).insert(message)
 
-  // return message
-  return await db('messages').where({ lesson_id }).insert(message, ['id'])
+    return message
+  } else if (process.env.DB_ENVIRONMENT === 'production') {
+    return await db('messages').where({ lesson_id }).insert(message, ['id'])
+  }
 }
 
 // Remove message
