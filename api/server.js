@@ -7,6 +7,10 @@ const server = express()
 
 server.use(express.json())
 
+server.get('/', (req, res) => {
+    return res.status(200).json({ message: 'Computers, man.  Computers.' })
+})
+
 server.use('/api/lessons', lessonsRouter)
 server.use('/api/messages', messagesRouter)
 
