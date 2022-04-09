@@ -69,6 +69,22 @@ function removeMessage(id) {
   return db('messages').where({ id }).del()
 }
 
+// USERS
+// Add new user
+function addUser(user) {
+  return db('users').insert(user, ['id', 'username'])
+}
+
+// Find user by name
+function findUserByUsername(username) {
+  return db('users').where({ username }).first()
+}
+
+// Find all users
+function findAllUsers() {
+  return db('users')
+}
+
 module.exports = {
   add,
   find,
@@ -79,4 +95,7 @@ module.exports = {
   findMessageById,
   addMessage,
   removeMessage,
+  addUser,
+  findUserByUsername,
+  findAllUsers
 }
