@@ -1,6 +1,7 @@
 const express = require('express')
 const LessonsDB = require('../models/dbHelpers')
 const bcrypt = require('bcryptjs')
+const generateToken = require('../auth/generateToken')
 
 const router = express.Router()
 
@@ -46,12 +47,16 @@ router.post('/login', (req, res) => {
     .then((user) => {
       if (user && bcrypt.compareSync(password, user.password)) {
         // Successful login
-        req.session.user = {
-          id: user.id,
-          username: user.username,
-        }
+        /* COOKIES */
+        // req.session.user = {
+        //   id: user.id,
+        //   username: user.username,
+        // }
+        
+        // JSON Web Token
+        const token = generateToken(user)
 
-        return res.status(200).json({ message: `Welcome ${user.username}` })
+        return res.status(200).json({ message: `Welcome ${user.username}`, token })
       } else {
         return res.status(401).json({ message: 'Invalid credentials' })
       }
